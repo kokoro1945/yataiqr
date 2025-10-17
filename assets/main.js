@@ -2123,11 +2123,27 @@ var YataiQR = (() => {
       var currentFormUrl = "";
       var renderToken = 0;
       function pad3(value) {
-        const raw = (value ?? "").toString().trim();
+        const raw = (value ?? "").toString().trim().toUpperCase();
         if (!raw) return "";
-        const digits = raw.replace(/[^\d]/g, "");
+        const cleaned = raw.replace(/[^A-Z0-9]/g, "");
+        if (!cleaned) return "";
+        if (/^[A-Z]/.test(cleaned[0])) {
+          const letter = cleaned[0];
+          const digitsPart = cleaned.slice(1).replace(/\D/g, "");
+          if (!digitsPart) return "";
+          const normalizedDigits = digitsPart.padStart(2, "0").slice(-2);
+          const numeric = parseInt(normalizedDigits, 10);
+          if (Number.isNaN(numeric) || numeric <= 0) return "";
+          return `${letter}${normalizedDigits}`;
+        }
+        const digits = cleaned.replace(/\D/g, "");
         if (!digits) return "";
-        return el.pad.checked ? digits.padStart(3, "0") : String(parseInt(digits, 10));
+        const numericValue = parseInt(digits, 10);
+        if (Number.isNaN(numericValue) || numericValue <= 0) return "";
+        if (el.pad.checked) {
+          return digits.padStart(3, "0").slice(-3);
+        }
+        return String(numericValue);
       }
       function buildFormUrl(boothId) {
         const url = new URL(FORM_BASE);
