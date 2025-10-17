@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>屋台QRコード作成ページ</title>
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body class="px-4 py-8 sm:px-6 lg:px-10">
+  <div class="mx-auto flex max-w-6xl flex-col gap-6">
+    <header class="space-y-2">
+      <h1 class="text-2xl font-bold text-slate-900 sm:text-3xl">屋台QRコード作成ページ</h1>
+      <p class="text-sm text-slate-500 sm:text-base">
+        屋台番号を入力すると、フォーム直リンクとQRコードを自動生成します（ページURLにも
+        <code class="rounded bg-orange-100 px-1 py-0.5 text-xs text-orange-700">?booth=</code> を保存）。
+      </p>
+    </header>
+
+    <section class="card">
+      <div class="grid gap-8 md:grid-cols-5">
+        <div class="space-y-6 md:col-span-3">
+          <div class="space-y-2">
+            <label for="booth" class="text-sm font-semibold text-slate-700">屋台番号</label>
+            <div class="flex flex-wrap items-center gap-3">
+              <input
+                id="booth"
+                type="text"
+                inputmode="numeric"
+                placeholder="例: 1 or 001"
+                class="w-full flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-base shadow-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200 sm:max-w-xs"
+              />
+              <label class="flex items-center gap-2 text-sm text-slate-500">
+                <input id="pad" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-orange-500 focus:ring-orange-400" checked />
+                3桁ゼロ埋め（001, 002, ...）
+              </label>
+            </div>
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="space-y-2">
+              <label for="qrsize" class="text-sm font-semibold text-slate-700">QRサイズ</label>
+              <select
+                id="qrsize"
+                class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-base shadow-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200"
+              >
+                <option value="240">240px</option>
+                <option value="300" selected>300px</option>
+                <option value="360">360px</option>
+                <option value="420">420px</option>
+                <option value="600">600px（ポスター用）</option>
+              </select>
+            </div>
+            <div class="space-y-2">
+              <label for="label" class="text-sm font-semibold text-slate-700">ラベル（QR下部）</label>
+              <input
+                id="label"
+                type="text"
+                placeholder="例: 屋台No. 001"
+                class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-base shadow-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200"
+              />
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button id="gen" class="btn-primary">QR生成</button>
+            <button id="copy" class="btn-ghost disabled:cursor-not-allowed disabled:opacity-60" disabled>URLをコピー</button>
+          </div>
+          <p class="text-sm text-slate-500">
+            ※ 「QR生成」でURLとQRを更新し、ページURLにも
+            <code class="rounded bg-orange-100 px-1 py-0.5 text-xs text-orange-700">?booth=</code>
+            を反映します（ブックマークや印刷に便利です）。
+          </p>
+        </div>
+
+        <div class="space-y-5 md:col-span-2">
+          <div class="qrbox" id="qrbox">
+            <span class="text-sm text-slate-400">ここにQRが表示されます</span>
+          </div>
+          <div class="grid gap-3">
+            <a id="download" class="btn-ghost disabled:cursor-not-allowed disabled:opacity-60" download>QR画像をダウンロード</a>
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-slate-700">フォームURL</label>
+            <code class="block max-h-28 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700" id="formurl">（未生成）</code>
+          </div>
+        </div>
+      </div>
+      <footer class="mt-6 text-sm text-slate-500">
+        生成されるQRを読み取ると、回答用フォームの「屋台番号」が自動で入力された状態で開きます。
+      </footer>
+    </section>
+
+    <section class="grid gap-4 rounded-2xl border border-dashed border-orange-200 bg-orange-50 px-5 py-4 text-sm text-orange-700">
+      <div class="space-y-1">
+        <h2 class="text-base font-semibold text-orange-700">使い方メモ</h2>
+        <ul class="space-y-1">
+          <li>① 屋台番号を入力して「QR生成」を押します。</li>
+          <li>② QRを読み取り確認し、必要ならラベルを調整します。</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <script src="./assets/main.js"></script>
+</body>
+</html>

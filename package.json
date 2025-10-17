@@ -1,0 +1,15 @@
+{
+  "name": "yataiqr",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static QR code generator for festival booths.",
+  "scripts": {
+    "start": "serve public",
+    "deploy": "gh-pages -d public"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "serve": "^14.2.5"
+  }
+}
