@@ -2118,13 +2118,15 @@ var YataiQR = (() => {
         copy: document.getElementById("copy"),
         qrbox: document.getElementById("qrbox"),
         download: document.getElementById("download"),
-        formurl: document.getElementById("formurl")
+        formurl: document.getElementById("formurl"),
+        boothName: document.getElementById("booth-name")
       };
       var currentQrDataUrl = "";
       var currentFormUrl = "";
       var renderToken = 0;
       var boothMap = null;
       var boothMapPromise = null;
+      var boothNameLookupToken = 0;
       // 連打やサイズ変更など複数の生成リクエストを順序制御するためのカウンタ。
       // 入力された屋台番号文字列を正規化し、生成処理に渡せるIDへ変換する。
       function pad3(value) {
@@ -2201,16 +2203,41 @@ var YataiQR = (() => {
       async function buildFormUrl(boothId) {
         const url = new URL(FORM_BASE);
         url.searchParams.set("booth", boothId);
+        let boothName = "";
         try {
           const map = await loadBoothMap();
-          const boothName = map.get(boothId);
-          if (boothName) {
-            url.searchParams.set("name", boothName);
-          }
+          boothName = map.get(boothId) || "";
+          if (boothName) url.searchParams.set("name", boothName);
         } catch (error) {
           console.error(error);
         }
-        return url.toString();
+        return { url: url.toString(), boothName };
+      }
+      function buildDefaultLabel(boothId, boothName) {
+        if (!boothId) return "";
+        return boothName ? `\u5C4B\u53F0No. ${boothId} ${boothName}` : `\u5C4B\u53F0No. ${boothId}`;
+      }
+      async function refreshBoothNameDisplay(boothId) {
+        if (!el.boothName) return "";
+        if (!boothId) {
+          boothNameLookupToken += 1;
+          el.boothName.textContent = "\u5C4B\u53F0\u540D\uFF1A\u5165\u529B\u3059\u308B\u3068\u81EA\u52D5\u8868\u793A\u3055\u308C\u307E\u3059";
+          return "";
+        }
+        const token = ++boothNameLookupToken;
+        el.boothName.textContent = "\u5C4B\u53F0\u540D\uFF1A\u691C\u7D22\u4E2D...";
+        try {
+          const map = await loadBoothMap();
+          if (token !== boothNameLookupToken) return "";
+          const boothName = map.get(boothId) || "";
+          el.boothName.textContent = boothName ? `\u5C4B\u53F0\u540D\uFF1A${boothName}` : "\u5C4B\u53F0\u540D\uFF1A\u8A72\u5F53\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093";
+          return boothName;
+        } catch (error) {
+          if (token !== boothNameLookupToken) return "";
+          console.error(error);
+          el.boothName.textContent = "\u5C4B\u53F0\u540D\uFF1A\u4E00\u89A7\u306E\u53D6\u5F97\u306B\u5931\u6557\u3057\u307E\u3057\u305F";
+          return "";
+        }
       }
       // QRプレビュー領域にシンプルなテキストプレースホルダーを描画する。
       function showPlaceholder(text) {
@@ -2267,12 +2294,16 @@ var YataiQR = (() => {
           return;
         }
         const size = parseInt(el.qrsize.value, 10) || 300;
-        const labelText = (el.label.value || `\u5C4B\u53F0No. ${boothId}`).trim();
         showPlaceholder("QR\u3092\u751F\u6210\u3057\u3066\u3044\u307E\u3059\u2026");
         setInteractiveState(false);
         const token = ++renderToken;
-        const formUrl = await buildFormUrl(boothId);
+        const { url: formUrl, boothName } = await buildFormUrl(boothId);
+        if (!el.label.value.trim()) {
+          el.label.value = buildDefaultLabel(boothId, boothName);
+        }
+        const labelText = (el.label.value || buildDefaultLabel(boothId, boothName)).trim();
         el.formurl.textContent = formUrl;
+        refreshBoothNameDisplay(boothId).catch((error) => console.error(error));
         try {
           const dataUrl = await import_qrcode.default.toDataURL(formUrl, {
             type: "image/png",
@@ -2311,8 +2342,19 @@ var YataiQR = (() => {
       function init() {
         showPlaceholder("\u3053\u3053\u306BQR\u304C\u8868\u793A\u3055\u308C\u307E\u3059");
         setInteractiveState(false);
+        if (el.boothName) {
+          el.boothName.textContent = "\u5C4B\u53F0\u540D\uFF1A\u5165\u529B\u3059\u308B\u3068\u81EA\u52D5\u8868\u793A\u3055\u308C\u307E\u3059";
+        }
         el.gen.addEventListener("click", () => {
           generate().catch((error) => console.error(error));
+        });
+        el.booth.addEventListener("input", () => {
+          const boothId = pad3(el.booth.value);
+          refreshBoothNameDisplay(boothId).then((boothName) => {
+            if (boothId && pad3(el.booth.value) === boothId && !el.label.value.trim()) {
+              el.label.value = buildDefaultLabel(boothId, boothName);
+            }
+          }).catch((error) => console.error(error));
         });
         el.booth.addEventListener("keydown", (event) => {
           if (event.key === "Enter") {
@@ -2323,6 +2365,12 @@ var YataiQR = (() => {
           generate().catch((error) => console.error(error));
         });
         el.pad.addEventListener("change", () => {
+          const boothId = pad3(el.booth.value);
+          refreshBoothNameDisplay(boothId).then((boothName) => {
+            if (boothId && pad3(el.booth.value) === boothId && !el.label.value.trim()) {
+              el.label.value = buildDefaultLabel(boothId, boothName);
+            }
+          }).catch((error) => console.error(error));
           generate().catch((error) => console.error(error));
         });
         el.label.addEventListener("input", () => {
