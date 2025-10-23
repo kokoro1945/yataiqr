@@ -2108,6 +2108,7 @@ var YataiQR = (() => {
     "src/main.js"() {
       var import_qrcode = __toESM(require_browser());
       var FORM_BASE = "https://kokoro1945.github.io/yatairanking2025/";
+      // 画面内で参照する主要DOM要素を一括でキャッシュする。
       var el = {
         booth: document.getElementById("booth"),
         pad: document.getElementById("pad"),
@@ -2122,6 +2123,10 @@ var YataiQR = (() => {
       var currentQrDataUrl = "";
       var currentFormUrl = "";
       var renderToken = 0;
+      var boothMap = null;
+      var boothMapPromise = null;
+      // 連打やサイズ変更など複数の生成リクエストを順序制御するためのカウンタ。
+      // 入力された屋台番号文字列を正規化し、生成処理に渡せるIDへ変換する。
       function pad3(value) {
         const raw = (value ?? "").toString().trim().toUpperCase();
         if (!raw) return "";
@@ -2145,14 +2150,73 @@ var YataiQR = (() => {
         }
         return String(numericValue);
       }
-      function buildFormUrl(boothId) {
+      // 屋台番号をクエリパラメータに設定したフォームURLを生成する。
+      function normalizeBoothId(rawId) {
+        const value = (rawId ?? "").toString().trim().toUpperCase();
+        if (!value) return "";
+        const letterMatch = value.match(/^([A-Z])(\d{1,2})$/);
+        if (letterMatch) {
+          const digits = letterMatch[2].padStart(2, "0");
+          return `${letterMatch[1]}${digits}`;
+        }
+        if (/^\d+$/.test(value)) {
+          return value.padStart(3, "0");
+        }
+        return value;
+      }
+      async function loadBoothMap() {
+        if (boothMap && boothMap.size > 0) return boothMap;
+        if (boothMapPromise) {
+          await boothMapPromise;
+          return boothMap || new Map();
+        }
+        boothMapPromise = (async () => {
+          const map = new Map();
+          try {
+            const response = await fetch("./booths.csv", { cache: "no-store" });
+            if (!response.ok) {
+              throw new Error(`Failed to load booths.csv: ${response.status}`);
+            }
+            const text = await response.text();
+            const rows = text.trim().split(/\r?\n/).slice(1);
+            for (const row of rows) {
+              if (!row) continue;
+              const parts = row.split(",");
+              if (parts.length < 3) continue;
+              const boothIdRaw = parts[1].trim();
+              const boothNameRaw = parts[2].trim();
+              if (!boothIdRaw || !boothNameRaw) continue;
+              const normalized = normalizeBoothId(boothIdRaw);
+              if (!normalized) continue;
+              map.set(normalized, boothNameRaw);
+            }
+          } catch (error) {
+            console.error(error);
+          }
+          boothMap = map;
+        })();
+        await boothMapPromise;
+        return boothMap || new Map();
+      }
+      async function buildFormUrl(boothId) {
         const url = new URL(FORM_BASE);
         url.searchParams.set("booth", boothId);
+        try {
+          const map = await loadBoothMap();
+          const boothName = map.get(boothId);
+          if (boothName) {
+            url.searchParams.set("name", boothName);
+          }
+        } catch (error) {
+          console.error(error);
+        }
         return url.toString();
       }
+      // QRプレビュー領域にシンプルなテキストプレースホルダーを描画する。
       function showPlaceholder(text) {
         el.qrbox.innerHTML = `<span class="muted">${text}</span>`;
       }
+      // 生成状態に応じてコピー・ダウンロード操作の可否を切り替える。
       function setInteractiveState(enabled) {
         el.copy.disabled = !enabled;
         el.download.classList.toggle("disabled", !enabled);
@@ -2163,6 +2227,7 @@ var YataiQR = (() => {
         }
         el.copy.textContent = "URL\u3092\u30B3\u30D4\u30FC";
       }
+      // データURLで渡されたQRコードをプレビュー領域に描画する。
       function renderQR(dataUrl, labelText) {
         el.qrbox.innerHTML = "";
         const wrap = document.createElement("div");
@@ -2184,12 +2249,14 @@ var YataiQR = (() => {
         if (labelText) wrap.appendChild(cap);
         el.qrbox.appendChild(wrap);
       }
+      // 現在ページのクエリとタイトルを最新の屋台番号に同期する。
       function updateQuery(boothId) {
         const url = new URL(window.location.href);
         url.searchParams.set("booth", boothId);
         history.replaceState(null, "", url);
         document.title = `\u5C4B\u53F0QR: ${boothId}`;
       }
+      // 屋台番号を正規化し、フォームURLとQRコードを生成してUIへ反映する。
       async function generate() {
         const boothId = pad3(el.booth.value);
         if (!boothId) {
@@ -2201,11 +2268,11 @@ var YataiQR = (() => {
         }
         const size = parseInt(el.qrsize.value, 10) || 300;
         const labelText = (el.label.value || `\u5C4B\u53F0No. ${boothId}`).trim();
-        const formUrl = buildFormUrl(boothId);
-        el.formurl.textContent = formUrl;
         showPlaceholder("QR\u3092\u751F\u6210\u3057\u3066\u3044\u307E\u3059\u2026");
         setInteractiveState(false);
         const token = ++renderToken;
+        const formUrl = await buildFormUrl(boothId);
+        el.formurl.textContent = formUrl;
         try {
           const dataUrl = await import_qrcode.default.toDataURL(formUrl, {
             type: "image/png",
@@ -2240,6 +2307,7 @@ var YataiQR = (() => {
           setInteractiveState(false);
         }
       }
+      // ページ初期化時にイベントリスナーを登録し、URLパラメータを反映する。
       function init() {
         showPlaceholder("\u3053\u3053\u306BQR\u304C\u8868\u793A\u3055\u308C\u307E\u3059");
         setInteractiveState(false);
