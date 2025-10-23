@@ -2127,6 +2127,9 @@ var YataiQR = (() => {
       var boothMap = null;
       var boothMapPromise = null;
       var boothNameLookupToken = 0;
+      var lastAutoLabel = "";
+      var isLabelCustomized = false;
+      var isProgrammaticLabelUpdate = false;
       // 連打やサイズ変更など複数の生成リクエストを順序制御するためのカウンタ。
       // 入力された屋台番号文字列を正規化し、生成処理に渡せるIDへ変換する。
       function pad3(value) {
@@ -2217,11 +2220,45 @@ var YataiQR = (() => {
         if (!boothId) return "";
         return boothName ? `\u5C4B\u53F0No. ${boothId} ${boothName}` : `\u5C4B\u53F0No. ${boothId}`;
       }
+      // 屋台番号に対応した既定ラベルを入力欄へ反映し、手動編集との競合を避ける。
+      function applyDefaultLabel(boothId, boothName) {
+        if (!boothId) return;
+        const defaultLabel = buildDefaultLabel(boothId, boothName);
+        const currentTrimmed = el.label.value.trim();
+        const matchesDefault = currentTrimmed === defaultLabel;
+        if (matchesDefault) {
+          isLabelCustomized = false;
+        }
+        if (currentTrimmed && isLabelCustomized && !matchesDefault) {
+          lastAutoLabel = defaultLabel;
+          return;
+        }
+        isProgrammaticLabelUpdate = true;
+        el.label.value = defaultLabel;
+        isProgrammaticLabelUpdate = false;
+        lastAutoLabel = defaultLabel;
+        isLabelCustomized = false;
+        if (currentQrDataUrl) {
+          renderQR(currentQrDataUrl, defaultLabel);
+        }
+      }
+      function clearAutoLabel() {
+        if (isLabelCustomized) return;
+        isProgrammaticLabelUpdate = true;
+        el.label.value = "";
+        isProgrammaticLabelUpdate = false;
+        isLabelCustomized = false;
+        lastAutoLabel = "";
+        if (currentQrDataUrl) {
+          renderQR(currentQrDataUrl, "");
+        }
+      }
       async function refreshBoothNameDisplay(boothId) {
         if (!el.boothName) return "";
         if (!boothId) {
           boothNameLookupToken += 1;
           el.boothName.textContent = "\u5C4B\u53F0\u540D\uFF1A\u5165\u529B\u3059\u308B\u3068\u81EA\u52D5\u8868\u793A\u3055\u308C\u307E\u3059";
+          clearAutoLabel();
           return "";
         }
         const token = ++boothNameLookupToken;
@@ -2298,9 +2335,7 @@ var YataiQR = (() => {
         setInteractiveState(false);
         const token = ++renderToken;
         const { url: formUrl, boothName } = await buildFormUrl(boothId);
-        if (!el.label.value.trim()) {
-          el.label.value = buildDefaultLabel(boothId, boothName);
-        }
+        applyDefaultLabel(boothId, boothName);
         const labelText = (el.label.value || buildDefaultLabel(boothId, boothName)).trim();
         el.formurl.textContent = formUrl;
         refreshBoothNameDisplay(boothId).catch((error) => console.error(error));
@@ -2351,8 +2386,8 @@ var YataiQR = (() => {
         el.booth.addEventListener("input", () => {
           const boothId = pad3(el.booth.value);
           refreshBoothNameDisplay(boothId).then((boothName) => {
-            if (boothId && pad3(el.booth.value) === boothId && !el.label.value.trim()) {
-              el.label.value = buildDefaultLabel(boothId, boothName);
+            if (boothId && pad3(el.booth.value) === boothId) {
+              applyDefaultLabel(boothId, boothName);
             }
           }).catch((error) => console.error(error));
         });
@@ -2367,14 +2402,25 @@ var YataiQR = (() => {
         el.pad.addEventListener("change", () => {
           const boothId = pad3(el.booth.value);
           refreshBoothNameDisplay(boothId).then((boothName) => {
-            if (boothId && pad3(el.booth.value) === boothId && !el.label.value.trim()) {
-              el.label.value = buildDefaultLabel(boothId, boothName);
+            if (boothId && pad3(el.booth.value) === boothId) {
+              applyDefaultLabel(boothId, boothName);
             }
           }).catch((error) => console.error(error));
           generate().catch((error) => console.error(error));
         });
         el.label.addEventListener("input", () => {
           const labelText = el.label.value.trim();
+          if (!isProgrammaticLabelUpdate) {
+            if (!labelText) {
+              isLabelCustomized = false;
+              lastAutoLabel = "";
+            } else {
+              isLabelCustomized = labelText !== lastAutoLabel;
+              if (!isLabelCustomized) {
+                lastAutoLabel = labelText;
+              }
+            }
+          }
           if (currentQrDataUrl) {
             renderQR(currentQrDataUrl, labelText);
           }
@@ -2383,7 +2429,6 @@ var YataiQR = (() => {
         const initBooth = params.get("booth") || "";
         if (initBooth) {
           el.booth.value = initBooth;
-          el.label.value = `\u5C4B\u53F0No. ${initBooth}`;
           generate().catch((error) => console.error(error));
         }
       }
