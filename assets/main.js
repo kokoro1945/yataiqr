@@ -2107,7 +2107,7 @@ var YataiQR = (() => {
   var require_main = __commonJS({
     "src/main.js"() {
       var import_qrcode = __toESM(require_browser());
-      var FORM_BASE = "https://kokoro1945.github.io/yatairanking2025/";
+      var FORM_BASE = "https://ikomasai.com/";
       // 画面内で参照する主要DOM要素を一括でキャッシュする。
       var el = {
         booth: document.getElementById("booth"),
