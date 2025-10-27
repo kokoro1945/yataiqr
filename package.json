@@ -5,11 +5,22 @@
   "description": "Static QR code generator for festival booths.",
   "scripts": {
     "start": "serve public",
-    "deploy": "gh-pages -d public"
+    "deploy": "gh-pages -d public",
+    "dev": "node server/index.js",
+    "build:catalog": "node scripts/build-booth-catalog.js"
   },
   "license": "ISC",
   "devDependencies": {
     "gh-pages": "^6.3.0",
     "serve": "^14.2.5"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "googleapis": "^131.0.0",
+    "node-fetch": "^3.3.2",
+    "p-limit": "^4.0.0"
   }
 }

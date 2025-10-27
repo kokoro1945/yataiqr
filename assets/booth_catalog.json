@@ -1,0 +1,470 @@
+[
+  {
+    "boothId": "A01",
+    "boothName": "GGクロッフル"
+  },
+  {
+    "boothId": "A02",
+    "boothName": "ジャンボフランクフルト"
+  },
+  {
+    "boothId": "A03",
+    "boothName": "花よりスモア"
+  },
+  {
+    "boothId": "A04",
+    "boothName": "トッポギハウス"
+  },
+  {
+    "boothId": "A05",
+    "boothName": "フランク信江❤️"
+  },
+  {
+    "boothId": "A06",
+    "boothName": "近響が奏でるベビーカステるん"
+  },
+  {
+    "boothId": "A07",
+    "boothName": "たこせん屋"
+  },
+  {
+    "boothId": "A08",
+    "boothName": "ローバー焼き鳥"
+  },
+  {
+    "boothId": "A09",
+    "boothName": "510雑貨店"
+  },
+  {
+    "boothId": "A10",
+    "boothName": "土木のおいも"
+  },
+  {
+    "boothId": "B01",
+    "boothName": "覇王樹座たこ焼きぶ"
+  },
+  {
+    "boothId": "B02",
+    "boothName": "フェスチキ"
+  },
+  {
+    "boothId": "B03",
+    "boothName": "布施ラボ　スイーツ部"
+  },
+  {
+    "boothId": "B04",
+    "boothName": "つっちーの激うまミニ揚げパン"
+  },
+  {
+    "boothId": "B05",
+    "boothName": "陶龍包"
+  },
+  {
+    "boothId": "B06",
+    "boothName": "瞬たこFLASH"
+  },
+  {
+    "boothId": "B07",
+    "boothName": "爆裂⭐️ポップ道"
+  },
+  {
+    "boothId": "B08",
+    "boothName": "ふみちゃんのポップコーン畑"
+  },
+  {
+    "boothId": "B09",
+    "boothName": "川村ゼミプロデュースパリパリウインナー"
+  },
+  {
+    "boothId": "B10",
+    "boothName": "行列のできる渡辺フランクフルト"
+  },
+  {
+    "boothId": "C01",
+    "boothName": "トリカワ"
+  },
+  {
+    "boothId": "C02",
+    "boothName": "あるま de たまごせんべい"
+  },
+  {
+    "boothId": "C03",
+    "boothName": "箏林堂"
+  },
+  {
+    "boothId": "C04",
+    "boothName": "熱三明治男"
+  },
+  {
+    "boothId": "C05",
+    "boothName": "林ゼミのあったか1杯"
+  },
+  {
+    "boothId": "C06",
+    "boothName": "サイクルドッグ"
+  },
+  {
+    "boothId": "C07",
+    "boothName": "肉とは"
+  },
+  {
+    "boothId": "C08",
+    "boothName": "近フル"
+  },
+  {
+    "boothId": "C09",
+    "boothName": "つるっとわかめうどん"
+  },
+  {
+    "boothId": "C10",
+    "boothName": "ゆず風味牛すじうどん"
+  },
+  {
+    "boothId": "D01",
+    "boothName": "ギョギョそば〜魚の音読みはウォウォ〜"
+  },
+  {
+    "boothId": "D02",
+    "boothName": "能登のよみがえりトート"
+  },
+  {
+    "boothId": "D03",
+    "boothName": "自家焙煎珈琲"
+  },
+  {
+    "boothId": "D04",
+    "boothName": "金さんの韓国おでん"
+  },
+  {
+    "boothId": "D05",
+    "boothName": "酸いも甘イモ〜青春味〜"
+  },
+  {
+    "boothId": "D06",
+    "boothName": "焼きとりさ"
+  },
+  {
+    "boothId": "D07",
+    "boothName": "石村よりたいを込めて"
+  },
+  {
+    "boothId": "D08",
+    "boothName": "福岡製麺"
+  },
+  {
+    "boothId": "D09",
+    "boothName": "イカ焼き研究所"
+  },
+  {
+    "boothId": "D10",
+    "boothName": "アゲアゲ↑↑パンっ！！スターズ⭐️"
+  },
+  {
+    "boothId": "E01",
+    "boothName": "More More s'more!"
+  },
+  {
+    "boothId": "E02",
+    "boothName": "ふらっとフランクフルト"
+  },
+  {
+    "boothId": "E03",
+    "boothName": "もちるんとん"
+  },
+  {
+    "boothId": "E04",
+    "boothName": "うまそうなもんやっ豚汁"
+  },
+  {
+    "boothId": "E05",
+    "boothName": "ホルモンクエソバ"
+  },
+  {
+    "boothId": "E06",
+    "boothName": "JAGAR HITODSHI⭐️#じゃがバタ界隈"
+  },
+  {
+    "boothId": "E07",
+    "boothName": "潜水食堂ソーキそば"
+  },
+  {
+    "boothId": "E08",
+    "boothName": "はしまきのはまーず"
+  },
+  {
+    "boothId": "E09",
+    "boothName": "あったか〜いはらパインパンケーキ"
+  },
+  {
+    "boothId": "E10",
+    "boothName": "フランクフルト屋さん"
+  },
+  {
+    "boothId": "E11",
+    "boothName": "ブロッ子特製ベビーカステラ"
+  },
+  {
+    "boothId": "E12",
+    "boothName": "ガラス造形ゼミ"
+  },
+  {
+    "boothId": "E13",
+    "boothName": "二刀流蛸焼き"
+  },
+  {
+    "boothId": "F01",
+    "boothName": "宇宙 de シチュー営業中"
+  },
+  {
+    "boothId": "F02",
+    "boothName": "錦起文藝"
+  },
+  {
+    "boothId": "F03",
+    "boothName": "電研バーガー"
+  },
+  {
+    "boothId": "F04",
+    "boothName": "布施ラボ　コスメ開発部"
+  },
+  {
+    "boothId": "F05",
+    "boothName": "さとしのポップコーン"
+  },
+  {
+    "boothId": "F06",
+    "boothName": "Airうどん"
+  },
+  {
+    "boothId": "F07",
+    "boothName": "ギョーザマン〜ドリンを添えて〜"
+  },
+  {
+    "boothId": "F08",
+    "boothName": "チュロス屋さん"
+  },
+  {
+    "boothId": "F09",
+    "boothName": "探検焼きそば隊"
+  },
+  {
+    "boothId": "F10",
+    "boothName": "Nuclear童話標本室"
+  },
+  {
+    "boothId": "F11",
+    "boothName": "わたあめ三郎"
+  },
+  {
+    "boothId": "F12",
+    "boothName": "みるせん at UNIONE"
+  },
+  {
+    "boothId": "G01",
+    "boothName": "Hot ひといき"
+  },
+  {
+    "boothId": "G02",
+    "boothName": "今夜焼きたいのは餃子か、貴方の未練か。"
+  },
+  {
+    "boothId": "G03",
+    "boothName": "SEMBA DOGG"
+  },
+  {
+    "boothId": "G04",
+    "boothName": "ハリケーン！！ポテト⭐️"
+  },
+  {
+    "boothId": "G05",
+    "boothName": "やきそば大将"
+  },
+  {
+    "boothId": "G06",
+    "boothName": "豚々"
+  },
+  {
+    "boothId": "H01",
+    "boothName": "いか一家 Final"
+  },
+  {
+    "boothId": "H02",
+    "boothName": "変革屋"
+  },
+  {
+    "boothId": "H03",
+    "boothName": "揚げ今川焼き"
+  },
+  {
+    "boothId": "H04",
+    "boothName": "カイグン　ヘイチョウガ　カク　ヤキトリ（正しい表記は韓国語）"
+  },
+  {
+    "boothId": "H05",
+    "boothName": "亜留満流小籠包"
+  },
+  {
+    "boothId": "I01",
+    "boothName": "イラゼミ屋"
+  },
+  {
+    "boothId": "I02",
+    "boothName": "タカミのウマウマたません"
+  },
+  {
+    "boothId": "I03",
+    "boothName": "文デザストア"
+  },
+  {
+    "boothId": "I04",
+    "boothName": "のりちゃん焼きそば"
+  },
+  {
+    "boothId": "I05",
+    "boothName": "ソーセージ焼き屋さん"
+  },
+  {
+    "boothId": "I06",
+    "boothName": "辛聞トッポギ"
+  },
+  {
+    "boothId": "I07",
+    "boothName": "高原パスタ"
+  },
+  {
+    "boothId": "I08",
+    "boothName": "パクッとパラチュロ！"
+  },
+  {
+    "boothId": "I09",
+    "boothName": "揚げパン工房田中堂"
+  },
+  {
+    "boothId": "J01",
+    "boothName": "〜おでんに候〜衣笠ゼミパビリオン"
+  },
+  {
+    "boothId": "J02",
+    "boothName": "モ〜烈！！鉄板'sシェフ"
+  },
+  {
+    "boothId": "J03",
+    "boothName": "ギョさこい乱舞"
+  },
+  {
+    "boothId": "J04",
+    "boothName": "100円揚げ餃子屋〜味と安さとetc.〜"
+  },
+  {
+    "boothId": "J05",
+    "boothName": "揚げ物の活学"
+  },
+  {
+    "boothId": "K01",
+    "boothName": "揚げパン屋さん"
+  },
+  {
+    "boothId": "K02",
+    "boothName": "ポップコーン論I"
+  },
+  {
+    "boothId": "K03",
+    "boothName": "激甘リカバリーたい焼き"
+  },
+  {
+    "boothId": "K04",
+    "boothName": "Spi's kitchen 2"
+  },
+  {
+    "boothId": "K05",
+    "boothName": "MORI✖️MAI"
+  },
+  {
+    "boothId": "K06",
+    "boothName": "なぶちのひとくち"
+  },
+  {
+    "boothId": "K07",
+    "boothName": "くろっふる日和"
+  },
+  {
+    "boothId": "K08",
+    "boothName": "YABAちゃん魂のIPPON PON PON"
+  },
+  {
+    "boothId": "K09",
+    "boothName": "中華ネギネギ餅屋"
+  },
+  {
+    "boothId": "K10",
+    "boothName": "チュロス"
+  },
+  {
+    "boothId": "K11",
+    "boothName": "ふみくんのチュロすてないで！"
+  },
+  {
+    "boothId": "K12",
+    "boothName": "アブパン"
+  },
+  {
+    "boothId": "L01",
+    "boothName": "揚げパン屋さん"
+  },
+  {
+    "boothId": "L02",
+    "boothName": "池田家の豚汁"
+  },
+  {
+    "boothId": "L03",
+    "boothName": "DYE's Chicken Burger"
+  },
+  {
+    "boothId": "L04",
+    "boothName": "ニア教授のとうもろこし屋さん"
+  },
+  {
+    "boothId": "L05",
+    "boothName": "揚げパン"
+  },
+  {
+    "boothId": "L06",
+    "boothName": "ISHI'sキッチン"
+  },
+  {
+    "boothId": "L07",
+    "boothName": "マンゴーわたがし"
+  },
+  {
+    "boothId": "L08",
+    "boothName": "来世もきっと思い出す唐沢ポテ子"
+  },
+  {
+    "boothId": "L09",
+    "boothName": "BOLEの餃子"
+  },
+  {
+    "boothId": "L10",
+    "boothName": "Lucky Potato"
+  },
+  {
+    "boothId": "L11",
+    "boothName": "ふぞろいチップス"
+  },
+  {
+    "boothId": "L12",
+    "boothName": "つるん。"
+  },
+  {
+    "boothId": "L13",
+    "boothName": "焼きうどんJAPAN"
+  },
+  {
+    "boothId": "L14",
+    "boothName": "生駒フランク本店"
+  },
+  {
+    "boothId": "L15",
+    "boothName": "「あの」わたがし"
+  }
+]

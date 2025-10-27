@@ -2220,6 +2220,32 @@ var YataiQR = (() => {
         if (!boothId) return "";
         return boothName ? `\u5C4B\u53F0No. ${boothId} ${boothName}` : `\u5C4B\u53F0No. ${boothId}`;
       }
+      async function generateQrDataForBatch(options) {
+        const opts = options || {};
+        const rawId = opts.boothId || opts.boothNumber || "";
+        const normalized = normalizeBoothId(rawId);
+        if (!normalized) {
+          throw new Error("Invalid boothId");
+        }
+        const size = Number.parseInt(opts.size, 10) || 300;
+        const { url: formUrl, boothName: resolvedBoothName } = await buildFormUrl(normalized);
+        const boothName = opts.boothName || resolvedBoothName || "";
+        const label = buildDefaultLabel(normalized, boothName);
+        const dataUrl = await import_qrcode.default.toDataURL(formUrl, {
+          type: "image/png",
+          width: size,
+          margin: 2,
+          errorCorrectionLevel: "H"
+        });
+        return {
+          boothId: normalized,
+          boothName,
+          formUrl,
+          label,
+          size,
+          dataUrl
+        };
+      }
       // 屋台番号に対応した既定ラベルを入力欄へ反映し、手動編集との競合を避ける。
       function applyDefaultLabel(boothId, boothName) {
         if (!boothId) return;
@@ -2433,6 +2459,23 @@ var YataiQR = (() => {
         }
       }
       init();
+      if (typeof window !== "undefined") {
+        const batchApi = {
+          normalizeBoothId,
+          buildDefaultLabel,
+          async getBoothName(boothId) {
+            const map = await loadBoothMap();
+            return map.get(normalizeBoothId(boothId)) || "";
+          },
+          generateQrData: generateQrDataForBatch,
+          FORM_BASE
+        };
+        Object.defineProperty(window, "YataiQRBatch", {
+          value: Object.freeze(batchApi),
+          writable: false,
+          configurable: false
+        });
+      }
     }
   });
   return require_main();
