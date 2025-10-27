@@ -3,22 +3,11 @@
     "https://drive.google.com/drive/folders/137A0zndjCD6DjrRT8K97IgI6XFgpv0hq?usp=drive_link";
   const CHUNK_SIZE = 5;
   const DEFAULT_QR_SIZE = 300;
-  const isMac =
-    typeof navigator !== "undefined" &&
-    /mac/i.test(navigator.platform || navigator.userAgent || "");
 
   let catalogCache = null;
   let modal = null;
   let state = null;
-
-  function matchesHotkey(event) {
-    if (!event) return false;
-    if (event.key.toLowerCase() !== "b") return false;
-    if (!event.shiftKey) return false;
-    if (event.altKey) return true;
-    if (isMac && event.metaKey) return true;
-    return false;
-  }
+  let triggerButton = null;
 
   async function loadCatalog() {
     if (catalogCache) return catalogCache;
@@ -190,6 +179,9 @@
     if (!modal) return;
     modal.overlay.classList.add("hidden");
     modal.overlay.setAttribute("aria-hidden", "true");
+    if (triggerButton) {
+      triggerButton.focus();
+    }
   }
 
   function initializeState() {
@@ -491,12 +483,15 @@
     }
   }
 
-  function handleKeydown(event) {
-    if (matchesHotkey(event)) {
+  function setupTriggerButton() {
+    triggerButton = document.getElementById("batch-trigger");
+    if (!triggerButton) return;
+    triggerButton.classList.remove("hidden");
+    triggerButton.addEventListener("click", (event) => {
       event.preventDefault();
       openModal();
-    }
+    });
   }
 
-  document.addEventListener("keydown", handleKeydown, { capture: true });
+  setupTriggerButton();
 })();

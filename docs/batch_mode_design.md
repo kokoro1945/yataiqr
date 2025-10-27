@@ -1,13 +1,13 @@
-# 一括QR生成隠しコマンド 設計書
+# 一括QR生成 管理者ボタン設計書
 
 ## 1. 構成概要
-- クライアント（既存の静的フロントエンド）に隠しコマンド起動のモーダルとバッチ実行ロジックを追加。
+- クライアント（既存の静的フロントエンド）に管理者ボタン起動のモーダルとバッチ実行ロジックを追加。
 - バッチ処理は前段で QR 画像を生成→PNG化し、後段でバックエンド API を経由して Google Drive にアップロード。
 - バックエンドはサービスアカウントを用いて Drive API にアクセスし、進捗レスポンスとログ記録を担う。
 
 ```
 User
- └─(Hidden command)─▶ Front-end Batch Orchestrator
+ └─(Admin button)─▶ Front-end Batch Orchestrator
                       ├─▶ QR Generator (現行 qrcode ライブラリ)
                       ├─▶ Upload Job Queue (max concurrency 3)
                       └─▶ Batch API Client
@@ -20,7 +20,7 @@ User
 
 ### 2.1 新規モジュール構成
 - `src/batch/index.ts`
-  - 隠しコマンドリスナーとモーダルトリガーを定義。
+  - 管理者ボタントリガーとモーダル初期化を定義。
   - `initBatchMode(document)` を `main` 初期化時に呼び出す。
 - `src/batch/BatchModal.ts`
   - モーダル UI の生成・状態管理。`open()`, `close()`, `setProgress()`, `setError()` などを提供。
@@ -40,10 +40,10 @@ User
 - `src/batch/filename.ts`
   - 屋台名を半角英数に整形するユーティリティ。全角記号は `_` に置換。
 
-### 2.2 隠しコマンド検知
-- `document.addEventListener('keydown', onKeyDown)` で `shiftKey && key === 'B'` を前提に、Windows/Linux では `altKey`、Mac では `altKey` または `metaKey` を許可する。
-- モーダルを1回でも開いた場合はリスナーを `once` に設定し、モーダルの中に「再実行」ボタンを設ける。
-- ARIA: モーダル開閉時に `aria-hidden` 切り替え、フォーカスをモーダル内のボタンへ移動。
+### 2.2 起動トリガー
+- 画面右下に常時表示される管理者向けボタン（`#batch-trigger`）を追加。Tailwind ユーティリティで丸型フローティングボタン風にスタイル。
+- ボタン押下で `openModal()` を呼び出し、一括処理モーダルを表示。
+- モーダル内で `閉じる` した際はフォーカスをトリガーボタンへ戻してアクセシビリティを担保。
 
 ### 2.3 QR 生成のバッチ化
 - 既存の `renderQR` はキャンバス描画のため非同期 `Promise`.
@@ -139,7 +139,7 @@ User
   - JSON を `src/batch/catalog.json` として保存し、TypeScript で `import catalog from './catalog.json' assert { type: 'json' };` を使う。
 
 ## 5. シーケンス（正常系）
-1. ユーザーが Windows/Linux では `Shift + Alt + B`、Mac では `Shift + Option + B` または `Shift + Command + B` を押下し、モーダルが開く。
+1. ユーザーが画面右下の「一括QR生成」ボタンを押下し、モーダルが開く。
 2. `生成開始` ボタン押下で `BatchRunner.start()`。
 3. カタログから先頭 3 件を `PromisePool` に投入。
 4. 各ジョブで `generateQrData` を呼び出し、`imageDataUrl` を取得。
@@ -163,7 +163,7 @@ User
   - `uploader.ts`: リクエスト分割（5件単位）の検証。
 - **統合テスト**
   - モックサーバーを用いた `BatchRunner` の end-to-end。
-  - Playwright で隠しコマンド→モーダル表示確認。
+  - Playwright で管理者ボタン押下→モーダル表示確認。
 - **手動テスト**
   - Staging 環境でサービスアカウントに限定共有されたフォルダへアップロードし、UI 上の進捗を確認。
 
@@ -171,7 +171,7 @@ User
 - バックエンドデプロイ（環境変数: `DRIVE_FOLDER_ID`, `GOOGLE_APPLICATION_CREDENTIALS`）。
 - `booth_catalog.json` を生成し、コードと一緒にコミット。
 - フロントエンドをデプロイし、キャッシュ無効化（`assets/main.js` のバージョン更新）。
-- 運用マニュアル（隠しコマンド手順・エラー時の対処法）を wiki に追記。
+- 運用マニュアル（管理者ボタンの位置・操作手順・エラー時の対処法）を wiki に追記。
 
 ## 9. リスクと緩和策
 - **Drive API 認証破綻**: トークン期限切れに備え、早期リフレッシュ＋Slack 通知。
