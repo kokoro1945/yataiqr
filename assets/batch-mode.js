@@ -1,9 +1,11 @@
 (function () {
   const DRIVE_FOLDER_LINK =
     "https://drive.google.com/drive/folders/137A0zndjCD6DjrRT8K97IgI6XFgpv0hq?usp=drive_link";
-  const BATCH_HOTKEY = { key: "b", shiftKey: true, altKey: true };
   const CHUNK_SIZE = 5;
   const DEFAULT_QR_SIZE = 300;
+  const isMac =
+    typeof navigator !== "undefined" &&
+    /mac/i.test(navigator.platform || navigator.userAgent || "");
 
   let catalogCache = null;
   let modal = null;
@@ -11,9 +13,11 @@
 
   function matchesHotkey(event) {
     if (!event) return false;
-    if (event.key.toLowerCase() !== BATCH_HOTKEY.key) return false;
-    if (!event.shiftKey || !event.altKey) return false;
-    return true;
+    if (event.key.toLowerCase() !== "b") return false;
+    if (!event.shiftKey) return false;
+    if (event.altKey) return true;
+    if (isMac && event.metaKey) return true;
+    return false;
   }
 
   async function loadCatalog() {

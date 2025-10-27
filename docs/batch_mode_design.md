@@ -41,7 +41,7 @@ User
   - 屋台名を半角英数に整形するユーティリティ。全角記号は `_` に置換。
 
 ### 2.2 隠しコマンド検知
-- `document.addEventListener('keydown', onKeyDown)` で `altKey && shiftKey && key === 'B'` をチェック。
+- `document.addEventListener('keydown', onKeyDown)` で `shiftKey && key === 'B'` を前提に、Windows/Linux では `altKey`、Mac では `altKey` または `metaKey` を許可する。
 - モーダルを1回でも開いた場合はリスナーを `once` に設定し、モーダルの中に「再実行」ボタンを設ける。
 - ARIA: モーダル開閉時に `aria-hidden` 切り替え、フォーカスをモーダル内のボタンへ移動。
 
@@ -139,7 +139,7 @@ User
   - JSON を `src/batch/catalog.json` として保存し、TypeScript で `import catalog from './catalog.json' assert { type: 'json' };` を使う。
 
 ## 5. シーケンス（正常系）
-1. ユーザーが `Shift + Alt + B` を押下し、モーダルが開く。
+1. ユーザーが Windows/Linux では `Shift + Alt + B`、Mac では `Shift + Option + B` または `Shift + Command + B` を押下し、モーダルが開く。
 2. `生成開始` ボタン押下で `BatchRunner.start()`。
 3. カタログから先頭 3 件を `PromisePool` に投入。
 4. 各ジョブで `generateQrData` を呼び出し、`imageDataUrl` を取得。
@@ -178,4 +178,3 @@ User
 - **カタログ漏れ**: ビルド時に `booth_catalog.json` の件数が 117 件であることを CI で検査。
 - **API レート制限**: フロントは 3 並列、バックエンドは指数バックオフでレート管理。
 - **ユーザー誤操作**: モーダルに「実行中はページを閉じないでください」を明示し、閉じた場合の再実行方法を案内。
-
