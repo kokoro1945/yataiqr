@@ -486,7 +486,6 @@
   function setupTriggerButton() {
     triggerButton = document.getElementById("batch-trigger");
     if (!triggerButton) return;
-    triggerButton.classList.remove("hidden");
     triggerButton.addEventListener("click", (event) => {
       event.preventDefault();
       openModal();

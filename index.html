@@ -14,6 +14,19 @@
         屋台番号を入力すると、フォーム直リンクとQRコードを自動生成します（ページURLにも
         <code class="rounded bg-orange-100 px-1 py-0.5 text-xs text-orange-700">?booth=</code> を保存）。
       </p>
+      <div class="flex flex-wrap items-center gap-3 pt-2">
+        <button
+          id="batch-trigger"
+          type="button"
+          class="flex items-center gap-2 rounded-xl bg-orange-600 px-5 py-3 text-base font-semibold text-white shadow-lg shadow-orange-600/35 transition hover:bg-orange-700 focus:outline-none focus:ring-4 focus:ring-orange-300"
+          aria-label="一括QR生成モードを開く"
+        >
+          一括QRをまとめて生成
+        </button>
+        <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+          運営専用
+        </span>
+      </div>
     </header>
 
     <section class="card">
@@ -103,15 +116,6 @@
   </div>
 
   <script src="./assets/main.js"></script>
-  <button
-    id="batch-trigger"
-    type="button"
-    class="fixed bottom-6 right-6 z-40 hidden rounded-full bg-orange-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-300 sm:flex sm:items-center sm:gap-2"
-    aria-label="一括QR生成モードを開く"
-  >
-    <span class="hidden sm:inline">一括QR生成</span>
-    <span class="sm:hidden">Batch</span>
-  </button>
   <script src="./assets/batch-mode.js"></script>
 </body>
 </html>
